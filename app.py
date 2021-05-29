@@ -1,4 +1,3 @@
-import init, routes
+from flask import Flask, jsonify, request
 
-if __name__ == '__main__':
-    app.run(debug=True)
+app = Flask(__name__)

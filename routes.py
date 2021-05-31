@@ -15,4 +15,4 @@ def get():
 
 @app.route('/api/products', methods=['POST'])
 def post():
-    return saveProduct(request.json)
+    return Product.saveProduct(request.json)

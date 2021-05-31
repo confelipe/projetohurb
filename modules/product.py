@@ -36,5 +36,10 @@ class Product:
         validates = validateProduct.validatePayload(data)
         if validates[0]:
             return jsonify(validates[0]), 400
+        #save product
         save = productTable.save(data, validates[1], validates[2])
         return jsonify(save), 201
+
+    def deleteProduct(product_id):
+        delete = productTable.delete(product_id)
+        return jsonify(), 200

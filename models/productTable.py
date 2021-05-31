@@ -42,3 +42,13 @@ class productTable:
         if(attribute):
             attributeTable.save(insert, data[0]['attributes'])
         return insert
+
+    def delete(product_id):
+        barcodeTable.delete(product_id)
+        attributeTable.delete(product_id)
+        conn = connection()
+        cursor = conn.cursor()
+        cursor.execute('DELETE FROM product WHERE product_id = %(product_id)s', ({'product_id':product_id,}))
+        conn.commit()
+        cursor.close()
+        conn.close()

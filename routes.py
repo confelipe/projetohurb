@@ -16,3 +16,7 @@ def get():
 @app.route('/api/products', methods=['POST'])
 def post():
     return Product.saveProduct(request.json)
+
+@app.route('/api/products/<product_id>', methods=['DELETE'])
+def delete(product_id):
+    return Product.deleteProduct(product_id)

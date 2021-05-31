@@ -13,3 +13,11 @@ class barcodeTable:
         cursor = conn.cursor()
         cursor.execute("INSERT INTO product_barcode (product_id, barcode) VALUES (%(product_id)s, %(barcode)s);", ({'product_id': product_id, 'barcode' : barcode,}))
         conn.commit()
+
+    def delete(product_id):
+        conn = connection()
+        cursor = conn.cursor()
+        cursor.execute('DELETE FROM product_barcode WHERE product_id = %(product_id)s;', ({'product_id':product_id,}))
+        conn.commit()
+        cursor.close()
+        conn.close()

@@ -5,14 +5,23 @@ from models.attributeTable import attributeTable
 import time
 
 class productTable:
-    def selectProduct():
+    def selectProduct(start,num):
         conn = connection()
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM product")
+        if(start != 0 and num != False):
+            cursor.execute("SELECT * FROM product LIMIT %(start)s, %(num)s", ({'start':int(start),'num':int(num),}))
+        elif(start != 0 and num == False):
+            num = 1000
+            cursor.execute("SELECT * FROM product LIMIT %(start)s, %(num)s", ({'start':int(start),'num':int(num),}))
+        elif(start == 0 and num != False):
+            cursor.execute("SELECT * FROM product LIMIT %(start)s, %(num)s", ({'start':int(start),'num':int(num),}))
+        else:
+            cursor.execute("SELECT * FROM product")
         products = cursor.fetchall()
         cursor.close()
         conn.close()
         return products
+
     def countProductSku(sku):
         conn = connection()
         cursor = conn.cursor()
@@ -32,6 +41,14 @@ class productTable:
         conn = connection()
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM product WHERE sku = %(sku)s;", ({'sku': sku,}))
+        select = cursor.fetchone()
+        cursor.close()
+        conn.close()
+        return select
+    def selectProductId(product_id):
+        conn = connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM product WHERE product_id = %(product_id)s;", ({'product_id': product_id,}))
         select = cursor.fetchone()
         cursor.close()
         conn.close()

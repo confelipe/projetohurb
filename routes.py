@@ -8,19 +8,22 @@ def get():
     return Product.getProducts(args)
 #route for filter by product id
 @app.route('/api/products/<product_id>', methods=['GET'])
-def getId():
+def getId(product_id):
     args = request.args
-    return Product.getProducts(args, product_id)
+    typeCode = 'product_id'
+    return Product.getProductsId(args, product_id, typeCode)
 #route for filter by sku 
 @app.route('/api/products/<sku>/sku', methods=['GET'])
-def getSku():
+def getSku(sku):
     args = request.args
-    return Product.getProducts(args, sku)
+    typeCode = 'sku'
+    return Product.getProductsId(args, sku, typeCode)
 #route for filter by barcode    
 @app.route('/api/products/<barcode>/barcode', methods=['GET'])
-def getBarcode():
+def getBarcode(barcode):
     args = request.args
-    return Product.getProducts(args, barcode)
+    typeCode = 'barcode'
+    return Product.getProductsId(args, barcode, typeCode)
 #route for put the product
 @app.route('/api/products/<product_id>', methods=['PUT'])
 def put(product_id):

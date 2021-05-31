@@ -7,7 +7,15 @@ from models.attributeTable import attributeTable
 class Product:
     
     def getProducts(args):
-        selectProducts = productTable.selectProduct()
+        if('start' in args):
+            start = args['start']
+        else:
+            start = 0
+        if('num' in args):
+            num = args['num']
+        else:
+            num = False
+        selectProducts = productTable.selectProduct(start, num)
         items = []
         for products in selectProducts:
             selectBarcode = barcodeTable.select(products[0])
@@ -30,11 +38,68 @@ class Product:
             })
         products = {
             "totalCount" : len(items),
-            "args" : args,
             "items" : items
         }
-        filterFields = Product.filterFields(args['fields'], items)
-        return jsonify(filterFields), 200
+        if('fields' in args):
+            filterFields = Product.filterFields(args['fields'], items)
+            products = {
+                "totalCount" : len(items),
+                "items" : filterFields
+            }
+            return jsonify(products), 200
+        else:
+            return jsonify(products), 200
+
+    def getProductsId(args, code, typeCode):
+        if(typeCode == 'product_id'):
+            selectProducts = productTable.selectProductId(int(code))
+            if(selectProducts == None):
+                message = {
+                    'errorText' : 'Can’t find product ('+code+')'
+                }
+                return message
+            selectBarcode = barcodeTable.select(int(code))
+            selectAttribute = attributeTable.select(int(code))
+        if(typeCode == 'sku'):
+            selectProducts = productTable.selectProductSku(code)
+            if(selectProducts == None):
+                message = {
+                    'errorText' : 'Can’t find SKU ('+code+')'
+                }
+                return message
+            selectBarcode = barcodeTable.select(int(selectProducts[0]))
+            selectAttribute = attributeTable.select(int(selectProducts[0]))
+        if(typeCode == 'barcode'):
+            selectBarcode = barcodeTable.selectBarcode(int(code))
+            if(selectBarcode == None):
+                message = {
+                    'errorText' : 'Can’t find barcode ('+code+')'
+                }
+                return message
+            selectProducts = productTable.selectProductId(int(selectBarcode[0]))
+            selectAttribute = attributeTable.select(int(selectBarcode[0]))
+        items = []
+        attributes = []
+        if(selectAttribute != None):
+            for attribute in selectAttribute:
+                attributes.append({
+                    "name" : attribute[0],
+                    "value" : attribute[1]
+                })
+        items.append({
+            'productId' : selectProducts[0],
+            'title' : selectProducts[1],
+            'sku' : selectProducts[2],
+            'barcodes' : selectBarcode,
+            'description' : selectProducts[3],
+            'attributes' : [attributes],
+            'price' : float(selectProducts[4])
+        })
+        if('fields' in args):
+            filterFields = Product.filterFields(args['fields'], items)
+            return jsonify(filterFields), 200
+        else:
+            return jsonify(items), 200
 
     def saveProduct(data):
         #validate payload
@@ -58,10 +123,11 @@ class Product:
 
     def filterFields(args, items):
         args = args.split(',')
+        fieldsDefault = ['title','sku','barcodes','description','attributes','price','productId']
+        filterFields = [p for p in fieldsDefault if p not in args]
         product = []
         number = 0
         for item in items:
-            for arg in args:
-                number = 0
-                product.append(str(arg)+' : '+str(item[arg]))
+            [item.pop(key) for key in filterFields]
+            product.append(item)
         return product

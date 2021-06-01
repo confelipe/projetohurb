@@ -45,6 +45,7 @@ class productTable:
         cursor.close()
         conn.close()
         return select
+        
     def selectProductId(product_id):
         conn = connection()
         cursor = conn.cursor()

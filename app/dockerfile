@@ -1,0 +1,6 @@
+FROM tiangolo/uwsgi-nginx-flask:python3.8
+COPY ./api /app
+EXPOSE 80
+COPY requirementes.txt requirementes.txt
+RUN python3 -m pip install --upgrade pip
+RUN pip3 install -r requirementes.txt

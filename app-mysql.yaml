@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: product-api-mysql
+  labels:
+    name: product-api-mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: product-api-mysql
+  template:
+    metadata:
+      labels:
+        app: product-api-mysql
+    spec:
+      containers:
+        - name: product-api-mysql
+          image: cflip3/hurb-product-api-mysql:v1.0.6
+          env: 
+            - name: MYSQL_ROOT_PASSWORD
+              value: cHJvZHVjdA==
+          ports:
+            - name: mysql
+              containerPort: 3306
+              protocol: TCP
+          volumeMounts:
+            - name: product-api-mysql-storage
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: product-api-mysql-storage
+          emptyDir: {}

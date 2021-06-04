@@ -26,10 +26,10 @@ spec:
               protocol: TCP
           resources: 
             limits:
-              cpu: 50m
+              cpu: 500m
             requests: 
-              cpu: 10m
-              memory: 25Mi
+              cpu: 250m
+              memory: 2Gi
           volumeMounts:
             - name: product-api-mysql-storage
               mountPath: /var/lib/mysql

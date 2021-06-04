@@ -2,7 +2,7 @@ version: '3'
 services:
     mysql:
         build: ./mysql
-        image: cflip3/hurb-product-api-mysql:v1.0.6
+        image: cflip3/hurb-product-api-mysql:v1.0.7
         ports:
             - "3306:3306"
     app:

@@ -24,9 +24,30 @@ spec:
             - name: mysql
               containerPort: 3306
               protocol: TCP
+          resources: 
+            limits:
+              cpu: 50m
+            requests: 
+              cpu: 10m
+              memory: 25Mi
           volumeMounts:
             - name: product-api-mysql-storage
               mountPath: /var/lib/mysql
       volumes:
         - name: product-api-mysql-storage
           emptyDir: {}
+
+---
+
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: product-api-mysql
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: product-api-mysql
+  minReplicas: 1
+  maxReplicas: 6
+  targetCPUUtilizationPercentage: 50

@@ -19,7 +19,22 @@ spec:
           - containerPort: 80
           resources: 
             limits:
-              cpu: 300m
+              cpu: 50m
             requests: 
-              cpu: 100m
-              memory: 250Mi
+              cpu: 10m
+              memory: 25Mi
+            
+---
+
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: product-api
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: product-api
+  minReplicas: 1
+  maxReplicas: 6
+  targetCPUUtilizationPercentage: 70
